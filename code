@@ -1,0 +1,52 @@
+//quick reminder this is just my first test I will try to do better in the future and my career hopefully.
+
+
+//the code we will use is
+
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+const int trigPin = 12;
+const int echoPin = 13;
+const int buzzerPin = 4;
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  
+  lcd.setCursor(0, 0);
+  lcd.print("System Ready");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  long duration;
+  int distance;
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+
+  if (distance < 15) {
+    lcd.setCursor(0, 0);
+    lcd.print("WARNING!      ");
+    lcd.setCursor(0, 1);
+    lcd.print("Close Distance!!");
+    
+    digitalWrite(buzzerPin, HIGH);
+  } else {
+    lcd.clear();
+    digitalWrite(buzzerPin, LOW);
+  }
+  delay(100);
+}
